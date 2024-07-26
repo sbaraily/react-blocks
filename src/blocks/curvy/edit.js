@@ -3,7 +3,7 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
-import { __ } from '@wordpress/i18n';
+import { __ } from "@wordpress/i18n";
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -11,8 +11,13 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import {PanelBody, ToggleControl } from '@wordpress/components';
+import { useBlockProps, InspectorControls } from "@wordpress/block-editor";
+import {
+	PanelBody,
+	ToggleControl,
+	HorizontalRule,
+	RangeControl,
+} from "@wordpress/components";
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -20,7 +25,7 @@ import {PanelBody, ToggleControl } from '@wordpress/components';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import './editor.scss';
+import "./editor.scss";
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -30,31 +35,60 @@ import './editor.scss';
  *
  * @return {Element} Element to render.
  */
-import metadata from './block.json';
-import { Curve } from './components/curve';
+import metadata from "./block.json";
+import { Curve } from "./components/curve";
 
 export default function Edit(props) {
 	console.log(props);
-	const {className, ...blockProps} = useBlockProps();
+	const { className, ...blockProps } = useBlockProps();
 	return (
 		<>
 			<section className={`${className} alignfull`} {...blockProps}>
-				{props.attributes.enableTopCurve && <Curve/>}	
+				{props.attributes.enableTopCurve && <Curve height={props.attributes.topHeight} width={props.attributes.topWidth} />}
 			</section>
-			
+
 			<InspectorControls>
 				<PanelBody title={__("Top curve", metadata.textdomain)}>
-					<div style={{display: "flex"}}>
-						<ToggleControl onChange={(isChecked) => {
-							props.setAttributes({
-								enableTopCurve: isChecked,
-							});
-						}} checked={props.attributes.enableTopCurve} />
+					<div style={{ display: "flex" }}>
+						<ToggleControl
+							onChange={(isChecked) => {
+								props.setAttributes({
+									enableTopCurve: isChecked,
+								});
+							}}
+							checked={props.attributes.enableTopCurve}
+						/>
 						<span>{__("Enable top curve", metadata.textdomain)}</span>
 					</div>
+					{props.attributes.enableTopCurve && (
+						<>
+							<HorizontalRule />
+							<RangeControl
+								min={100}
+								max={300}
+								value={props.attributes.topWidth || 100}
+								onChange={(newValue) => [
+									props.setAttributes({
+										topWidth: parseInt(newValue)
+									})
+								]}		
+								label={__("Width", metadata.textdomain)}
+							/>
+							<RangeControl
+								min={0}
+								max={200}
+								value={props.attributes.topHeight || 100}
+								onChange={(newValue) => [
+									props.setAttributes({
+										topHeight: parseInt(newValue)
+									})
+								]}		
+								label={__("Height", metadata.textdomain)}
+							/>
+						</>
+					)}
 				</PanelBody>
 			</InspectorControls>
-			
 		</>
 	);
 }
