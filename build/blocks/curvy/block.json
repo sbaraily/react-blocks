@@ -49,9 +49,21 @@
       "type": "number",
       "default": 100
     },
+    "topFlipX": {
+      "type": "boolean",
+      "default": "false"
+    },
+    "topFlipY": {
+      "type": "boolean",
+      "default": "false"
+    },
     "enableBottomCurve": {
       "type": "boolean",
       "default": "false"
+    },
+    "topColor": {
+      "type": "string",
+      "default": "#ffffff"
     }
   },
   "textdomain": "blockylicious",
